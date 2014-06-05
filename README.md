@@ -14,7 +14,7 @@ Installation
 Installation is via [Composer](https://getcomposer.org/). Add the following to your `composer.json` file:
 
     "require": {
-        "j7mbo/TorrentPHP": "dev-master" 
+        "j7mbo/torrent-php": "dev-master" 
     }
 
 Don't forget to run `composer install` to create the `vendor/` directory containing all the project's dependencies automatically for you.
