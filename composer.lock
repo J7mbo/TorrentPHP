@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6ea6140b52eeda8b07a83ee4e36ad96a",
+    "hash": "5fa030fdfb90c81917ce698ee5aaf218",
     "packages": [
         {
             "name": "rdlowrey/alert",
-            "version": "v0.1.2",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rdlowrey/alert.git",
-                "reference": "71e3331d21f90b9143ee91513560fa891e09f1ec"
+                "reference": "a09cc62f81d8950e05e6c715668be3cb2a07d716"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rdlowrey/alert/zipball/71e3331d21f90b9143ee91513560fa891e09f1ec",
-                "reference": "71e3331d21f90b9143ee91513560fa891e09f1ec",
+                "url": "https://api.github.com/repos/rdlowrey/alert/zipball/a09cc62f81d8950e05e6c715668be3cb2a07d716",
+                "reference": "a09cc62f81d8950e05e6c715668be3cb2a07d716",
                 "shasum": ""
             },
             "require": {
@@ -24,9 +24,9 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Alert": "src"
-                }
+                "files": [
+                    "src/bootstrap.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -35,7 +35,7 @@
             "authors": [
                 {
                     "name": "Daniel Lowrey",
-                    "email": "rdlowrey@gmail.com",
+                    "email": "rdlowrey@php.net",
                     "role": "Creator / Lead Developer"
                 }
             ],
@@ -47,7 +47,7 @@
                 "libevent",
                 "non-blocking"
             ],
-            "time": "2013-08-12 15:35:18"
+            "time": "2014-06-11 14:09:10"
         },
         {
             "name": "rdlowrey/artax",
@@ -55,17 +55,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rdlowrey/Artax.git",
-                "reference": "c141c70ae6ca264e4c6fc5de0d2a0b12fa236a9a"
+                "reference": "d505fc6f6dd63ab61b368a92f2684d243f47ead7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rdlowrey/Artax/zipball/c141c70ae6ca264e4c6fc5de0d2a0b12fa236a9a",
-                "reference": "c141c70ae6ca264e4c6fc5de0d2a0b12fa236a9a",
+                "url": "https://api.github.com/repos/rdlowrey/Artax/zipball/d505fc6f6dd63ab61b368a92f2684d243f47ead7",
+                "reference": "d505fc6f6dd63ab61b368a92f2684d243f47ead7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
-                "rdlowrey/alert": "~0.1.2"
+                "rdlowrey/alert": "~0.8.1"
             },
             "type": "library",
             "autoload": {
@@ -93,7 +93,7 @@
                 "parallel",
                 "rest"
             ],
-            "time": "2014-05-05 19:58:19"
+            "time": "2014-06-14 14:32:59"
         }
     ],
     "packages-dev": [
@@ -520,9 +520,9 @@
     "stability-flags": {
         "rdlowrey/artax": 20
     },
-    "platform": [
-
-    ],
+    "platform": {
+        "php": ">=5.3.2"
+    },
     "platform-dev": [
 
     ]
