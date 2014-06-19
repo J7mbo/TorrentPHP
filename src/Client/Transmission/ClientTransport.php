@@ -210,7 +210,7 @@ class ClientTransport implements ClientTransportInterface
      *
      * @return Response The HTTP response containing headers / body ready for validation / parsing
      */
-    private function performRPCRequest($method, array $arguments)
+    protected function performRPCRequest($method, array $arguments)
     {
         $returnFields = array(
             'hashString', 'name', 'sizeWhenDone', 'status', 'rateDownload', 'rateUpload',
