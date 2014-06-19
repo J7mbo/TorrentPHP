@@ -76,10 +76,10 @@ class ClientTransport implements ClientTransportInterface
     /**
      * {@inheritdoc}
      */
-    public function getTorrents($id = null)
+    public function getTorrents(array $ids = array())
     {
         $method = self::METHOD_GET;
-        $arguments = ((is_null($id)) ? array() : array('ids' => array($id)));
+        $arguments = (empty($ids)) ? array() : array('ids' => $ids);
 
         try
         {

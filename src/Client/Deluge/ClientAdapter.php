@@ -15,16 +15,16 @@ class ClientAdapter extends BaseClientAdapter
     /**
      * @see ClientTransport::getTorrents()
      */
-    public function getTorrents($id = null)
+    public function getTorrents(array $ids = array())
     {
-        $data = json_decode($this->transport->getTorrents($id), true);
+        $data = json_decode($this->transport->getTorrents($ids), true);
 
         $torrents = array();
 
-        if (!is_null($id))
+        if (!empty($ids))
         {
             $changed = array('result' => array(), 'error' => $data['error']);
-            $changed['result'][$id] = $data['result'];
+            $changed['result'][$ids[0]] = $data['result'];
             $data = $changed;
         }
 

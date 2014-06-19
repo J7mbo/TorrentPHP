@@ -17,9 +17,9 @@ class ClientAdapter extends BaseClientAdapter
     /**
      * @see ClientTransport::getTorrents()
      */
-    public function getTorrents($id = null)
+    public function getTorrents(array $ids = array())
     {
-        $data = json_decode($this->transport->getTorrents($id));
+        $data = json_decode($this->transport->getTorrents($ids));
 
         $torrents = array();
 

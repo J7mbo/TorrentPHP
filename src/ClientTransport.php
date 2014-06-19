@@ -19,13 +19,13 @@ interface ClientTransport
     /**
      * Get a list of all torrents from the client
      *
-     * @param string $id Optional id (hash string?) to retrieve a specific torrent's data
+     * @param array $ids Optional array of id / hashStrings to get data for specific torrents
      *
      * @throws ClientException  When the client does not return expected 'success' output
      *
      * @return string A JSON string of data
      */
-    public function getTorrents($id = null);
+    public function getTorrents(array $ids = array());
 
     /**
      * Add a torrent to the client

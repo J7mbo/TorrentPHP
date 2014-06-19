@@ -31,11 +31,6 @@ class ClientTransport implements ClientTransportInterface
     const METHOD_GET_ALL = 'core.get_torrents_status';
 
     /**
-     * RPC Method to call to get torrent data for a single torrent
-     */
-    const METHOD_GET_SINGLE = 'core.get_torrent_status';
-
-    /**
      * RPC Method to call to add a torrent from a url
      */
     const METHOD_ADD = 'core.add_torrent_url';
@@ -87,13 +82,13 @@ class ClientTransport implements ClientTransportInterface
     /**
      * {@inheritdoc}
      */
-    public function getTorrents($id = null)
+    public function getTorrents(array $ids = array())
     {
-        $method = ((is_null($id)) ? self::METHOD_GET_ALL : self::METHOD_GET_SINGLE);
+        $method = self::METHOD_GET_ALL;
 
         $arguments = array(
             /** Torrent ID if provided - null returns all torrents **/
-            ((is_null($id)) ? null : $id),
+            empty($ids) ? null : ['id' => $ids],
             /** Return Keys **/
             array(
                 'name', 'state', 'files', 'eta', 'hash', 'download_payload_rate', 'status',
