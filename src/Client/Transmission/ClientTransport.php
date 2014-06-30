@@ -47,17 +47,17 @@ class ClientTransport implements ClientTransportInterface
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * @var array Connection arguments
      */
-    private $connectionArgs;
+    protected $connectionArgs;
 
     /**
      * @constructor
