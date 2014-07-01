@@ -3,8 +3,8 @@
 namespace TorrentPHP\Client\Transmission;
 
 use Artax\ClientException as HTTPException,
+    TorrentPHP\ClientException,
     Alert\LibeventReactor,
-    Alert\ReactorFactory,
     Alert\NativeReactor,
     Artax\AsyncClient,
     Artax\Response,
@@ -18,44 +18,64 @@ use Artax\ClientException as HTTPException,
 class AsyncClientTransport extends ClientTransport
 {
     /**
-     * @var LibeventReactor|NativeReactor
+     * @var AsyncClientFactory
      */
-    protected $reactor;
+    protected $clientFactory;
 
     /**
      * @constructor
      *
-     * @param AsyncClient                  $client  Artax Async HTTP Client
-     * @param Request                      $request Empty Request object
-     * @param ReactorFactory               $reactor Factory for building the Alert Reactor
-     * @param ConnectionConfig             $config  Configuration object used to connect over rpc
+     * @param AsyncClientFactory $clientFactory Artax Async HTTP Client
+     * @param Request            $request       Empty Artax Request Object
+     * @param ConnectionConfig   $config        Configuration object used to connect over rpc
      */
-    public function __construct(AsyncClient $client, Request $request, ReactorFactory $reactor, ConnectionConfig $config)
+    public function __construct(AsyncClientFactory $clientFactory, Request $request, ConnectionConfig $config)
     {
         $this->connectionArgs = $config->getArgs();
-        $this->reactor        = $reactor->select();
+        $this->clientFactory  = $clientFactory;
         $this->request        = $request;
-        $this->client         = $client;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param callable $callable A callable that will be given the async response
+     */
+    public function getTorrents(array $ids = array(), callable $callable = null)
+    {
+        $method = self::METHOD_GET;
+        $arguments = (empty($ids)) ? array() : array('ids' => $ids);
+        $callable = ($callable === null) ? function(){} : $callable;
+
+        try
+        {
+            $this->performRPCRequest($method, $arguments, $callable);
+        }
+        catch(HTTPException $e)
+        {
+            throw new ClientException($e->getMessage());
+        }
     }
 
     /**
      * {@inheritdoc}
      *
-     * @todo Something to do with a callable being passed in here??
+     * @param callable $callable Pass in a callable that gets passed one argument which is the response body
      */
-    public function performRpcRequest($method, array $arguments)
+    protected function performRPCRequest($method, array $arguments, callable $callable)
     {
         $returnFields = array(
             'hashString', 'name', 'sizeWhenDone', 'status', 'rateDownload', 'rateUpload',
             'uploadedEver', 'files', 'errorString'
         );
 
-        $reactor = clone $this->reactor;
-        $client  = clone $this->client;
+        /** @var AsyncClient $client */
+        /** @var LibEventReactor|NativeReactor $reactor */
+        list ($reactor, $client) = $this->clientFactory->build();
         $request = clone $this->request;
 
         /** Callback for response data from client **/
-        $onResponse = function(Response $response, Request $request) use ($reactor, $method) {
+        $onResponse = function(Response $response) use ($reactor, $method, $callable) {
 
             $isJson = function() use ($response) {
                 json_decode($response->getBody());
@@ -64,6 +84,7 @@ class AsyncClientTransport extends ClientTransport
 
             if ($response->getStatus() !== 200 || !$isJson())
             {
+
                 $reactor->stop();
 
                 throw new HTTPException(sprintf(
@@ -72,11 +93,13 @@ class AsyncClientTransport extends ClientTransport
                 ));
             }
 
-            return $response->getBody();
+            $reactor->stop();
+
+            $callable($response->getBody());
         };
 
         /** Callback on error for either auth response or response **/
-        $onError = function(\Exception $e, Request $request) use($reactor) {
+        $onError = function(\Exception $e) use($reactor) {
             $reactor->stop();
 
             throw new HTTPException("Something went wrong..." . $e->getMessage());
@@ -92,7 +115,7 @@ class AsyncClientTransport extends ClientTransport
                 throw new HTTPException("Response from torrent client did not return an X-Transmission-Session-Id header");
             }
 
-            $sessionId = $request->getHeader('X-Transmission-Session-Id');
+            $sessionId = $response->getHeader('X-Transmission-Session-Id');
 
             $request = clone $request;
             $request->setMethod('POST');
@@ -122,5 +145,7 @@ class AsyncClientTransport extends ClientTransport
 
             $client->request($request, $onAuthResponse, $onError);
         });
+
+        $reactor->run();
     }
 } 
