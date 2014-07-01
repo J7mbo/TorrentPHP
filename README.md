@@ -146,6 +146,46 @@ Torrent Clients
 
 **Deluge** requires both `deluged` and `deluge-web` running.
 
+Asynchronous Calls
+===
+
+Love event-driven programming and callback hell? You can make asynchronous calls with TorrentPHP. These are done using
+[Artax](https://github.com/rdlowrey/Artax/) and [Alert](https://github.com/rdlowrey/Alert). Effectively, you pass a PHP
+[callable](http://www.php.net/manual/en/language.types.callable.php) (requires PHP 5.4) and this is invoked with the response
+only when the response is received. It's non-blocking, and it's cool.
+
+Currently only `getTorrents()` supports asynchronous calls. Here's an example of making async calls to Deluge:
+
+    use TorrentPHP\Client\Deluge\ConnectionConfig,
+        TorrentPHP\Client\Deluge\AsyncClientTransport,
+        TorrentPHP\Client\Deluge\AsyncClientFactory,
+        Alert\ReactorFactory;
+
+    // Factory to create the async client
+    $clientFactory = new TorrentPHP\Client\AsyncClientFactory;
+
+    // We need a request object as before
+    $request = new Artax\Request;
+
+    // Our connection settings
+    $config = new ConnectionConfig([
+        'host'     => 'localhost',
+        'port'     => 8112,
+        'password' => 'deluge'
+    ]);
+
+    // The new AsyncClientTransport
+    $transport = new AsyncClientTransport($clientFactory, $request, $config);
+
+    // Our own function gets invoked on the async response. The response is "injected" into the first variable for us.
+    $callable = function($response) {
+        echo 'This could have taken 5 seconds or more, but it's async, so it's non-blocking. Yay!' . PHP_EOL;
+        var_dump($response);
+    };
+
+    // Let's get our torrents asynchronously - the new AsyncClientTransport object takes a second callable parameter
+    $transport->getTorrents([], $callable);
+
 Extension
 ====
 
