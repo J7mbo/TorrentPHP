@@ -1,6 +1,6 @@
 <?php
 
-namespace TorrentPHP\Client\Transmission;
+namespace TorrentPHP\Client;
 
 use Alert\ReactorFactory,
     Artax\AsyncClient;
@@ -10,7 +10,7 @@ use Alert\ReactorFactory,
  *
  * Responsible for building the Async Client and Reactor for use within the AsyncClientTransport
  *
- * @package TorrentPHP\Client\Transmission
+ * @package TorrentPHP\Client
  */
 class AsyncClientFactory
 {

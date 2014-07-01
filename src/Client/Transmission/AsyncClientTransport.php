@@ -3,6 +3,7 @@
 namespace TorrentPHP\Client\Transmission;
 
 use Artax\ClientException as HTTPException,
+    TorrentPHP\Client\AsyncClientFactory,
     TorrentPHP\ClientException,
     Alert\LibeventReactor,
     Alert\NativeReactor,
