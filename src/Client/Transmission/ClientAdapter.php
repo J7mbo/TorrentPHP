@@ -32,6 +32,8 @@ class ClientAdapter extends BaseClientAdapter
             };
 
             $this->transport->getTorrents($ids, $jsonToTorrents);
+
+            return true;
         }
     }
 
